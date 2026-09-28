@@ -8,7 +8,7 @@ const emptyScores=()=>Object.fromEntries(scoreCategories.map(c=>[c,0])) as Simul
 const idleFeedback:SimulationState['feedback']={kind:'idle',message:'Select an answer to receive instructor feedback.'};
 export const createInitialSimulationState=():SimulationState=>({currentStep:0,selectedStructure:null,completedSteps:[],attemptsByStep:{},mistakes:[],categoryScores:emptyScores(),feedback:idleFeedback,simulationStatus:'active'});
 export const initialSimulationState=createInitialSimulationState();
-const storageKey='btkv-cabg-progress-v1';
+const storageKey='btkv-cabg-progress-v2';
 const restoreSimulationState=():SimulationState=>{
  try {
   const saved=localStorage.getItem(storageKey);
@@ -44,11 +44,13 @@ export function simulationReducer(state:SimulationState,action:SimulationAction)
   if(action.answer===step.correctAnswer){
    const current=state.categoryScores[step.category];
    const earned=Math.max(0,step.points-(state.attemptsByStep[step.id]??0));
-   return {...state,attemptsByStep:attempts,completedSteps:[...state.completedSteps,step.id],categoryScores:{...state.categoryScores,[step.category]:Math.min(categoryMaximums[step.category],current+earned)},feedback:{kind:'success',message:`Correct. ${step.educationalNote} Read the note, then select Next.`}};
+   return {...state,attemptsByStep:attempts,completedSteps:[...state.completedSteps,step.id],categoryScores:{...state.categoryScores,[step.category]:Math.min(categoryMaximums[step.category],current+earned)},feedback:{kind:'success',message:step.instructor.correct,completion:step.instructor.completion}};
   }
   const expected=step.type==='anatomy'?anatomyInfo[step.correctAnswer as StructureId].name:step.options?.find(o=>o.id===step.correctAnswer)?.label??step.correctAnswer;
   const explanation=step.type==='anatomy'?`You selected ${anatomyInfo[action.answer as StructureId].name}. ${anatomyInfo[action.answer as StructureId].description} The target is ${expected}. ${step.educationalNote}`:step.options?.find(o=>o.id===action.answer)?.feedback??step.educationalNote;
-  return {...state,attemptsByStep:attempts,mistakes:[...state.mistakes,{stepId:step.id,stepTitle:step.title,selected:action.label,expected,explanation}],feedback:{kind:'error',message:`Not quite. ${explanation} Try again.`}};
+  const priorErrors=state.attemptsByStep[step.id]??0;
+  const guidance=priorErrors===0?step.instructor.firstIncorrect:step.instructor.repeatedIncorrect[(priorErrors-1)%step.instructor.repeatedIncorrect.length];
+  return {...state,attemptsByStep:attempts,mistakes:[...state.mistakes,{stepId:step.id,stepTitle:step.title,selected:action.label,expected,explanation}],feedback:{kind:'error',message:`${guidance} You chose “${action.label}”. ${explanation}`}};
  }
  return state;
 }
