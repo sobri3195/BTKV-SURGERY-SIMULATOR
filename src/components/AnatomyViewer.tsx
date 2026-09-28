@@ -7,8 +7,8 @@ const ids: StructureId[] = ['lad','lcx','rca','lima','aorta','left-atrium','righ
 const names: Record<StructureId,string> = {lad:'LAD',lcx:'LCx',rca:'RCA',lima:'LIMA',aorta:'Aorta','left-atrium':'Left atrium','right-atrium':'Right atrium','left-ventricle':'Left ventricle','right-ventricle':'Right ventricle'};
 const vessels = new Set<StructureId>(['lad','lcx','rca','lima','aorta']);
 
-export function AnatomyViewer({selected,onSelect,disabled=false}:{selected:StructureId|null;onSelect:(id:StructureId)=>void;disabled?:boolean}) {
-  const [zoom,setZoom]=useState(1), [labels,setLabels]=useState(true), [hovered,setHovered]=useState<StructureId|null>(null);
+export function AnatomyViewer({selected,onSelect,disabled=false,initialLabels=true,showDetails=true,hideLegend=false,allowLabels=true}:{selected:StructureId|null;onSelect:(id:StructureId)=>void;disabled?:boolean;initialLabels?:boolean;showDetails?:boolean;hideLegend?:boolean;allowLabels?:boolean}) {
+  const [zoom,setZoom]=useState(1), [labels,setLabels]=useState(initialLabels), [hovered,setHovered]=useState<StructureId|null>(null);
   const pinch=useRef<number|null>(null), titleId=useId(), descriptionId=useId(), active=selected??hovered;
   const changeZoom=(next:number)=>setZoom(Math.min(2,Math.max(1,next)));
   const interactive=(id:StructureId)=>({
@@ -31,7 +31,7 @@ export function AnatomyViewer({selected,onSelect,disabled=false}:{selected:Struc
             <button type="button" className="rounded-md p-2 text-muted hover:bg-white/10 hover:text-white disabled:opacity-35" onClick={()=>changeZoom(zoom+.25)} disabled={zoom>=2} aria-label="Zoom in"><Plus className="h-4 w-4"/></button>
           </div>
           <button type="button" className="btn-secondary !gap-1.5 !rounded-lg !px-3 !py-2" onClick={()=>changeZoom(1)} disabled={zoom===1}><RotateCcw className="h-3.5 w-3.5"/>Reset view</button>
-          <button type="button" aria-pressed={labels} className={`btn-secondary !gap-1.5 !rounded-lg !px-3 !py-2 ${labels?'!border-cyan !bg-cyan/10':''}`} onClick={()=>setLabels(value=>!value)}><Tags className="h-3.5 w-3.5"/>Labels</button>
+          {allowLabels&&<button type="button" aria-pressed={labels} className={`btn-secondary !gap-1.5 !rounded-lg !px-3 !py-2 ${labels?'!border-cyan !bg-cyan/10':''}`} onClick={()=>setLabels(value=>!value)}><Tags className="h-3.5 w-3.5"/>Labels</button>}
         </div>
       </header>
       <div className="relative overflow-auto overscroll-contain"
@@ -56,8 +56,8 @@ export function AnatomyViewer({selected,onSelect,disabled=false}:{selected:Struc
         </svg>
         <span className="pointer-events-none absolute bottom-3 right-3 rounded border border-line bg-ink/90 px-2 py-1 text-[10px] font-bold uppercase tracking-widest text-muted">Schematic educational illustration</span>
       </div>
-      <div className="border-t border-line bg-white/[.02] px-4 py-3"><h3 className="text-[10px] font-bold uppercase tracking-[.2em] text-muted">Legend · select to highlight</h3><div className="mt-2 flex flex-wrap gap-2">{ids.map(id=><button key={id} type="button" disabled={disabled} aria-pressed={selected===id} onClick={()=>legendSelect(id)} onMouseEnter={()=>setHovered(id)} onMouseLeave={()=>setHovered(null)} onFocus={()=>setHovered(id)} onBlur={()=>setHovered(null)} className={`rounded-full border px-3 py-1.5 text-xs font-semibold ${active===id?'border-cyan bg-cyan/15 text-cyan':'border-line bg-white/[.03] text-slate-300 hover:border-slate-500'} disabled:cursor-default`}><span className={`mr-1.5 inline-block h-2 w-2 rounded-full ${vessels.has(id)?'bg-[#f4c469]':'bg-[#b94e6b]'}`} aria-hidden="true"/>{names[id]}</button>)}</div></div>
+      {!hideLegend&&<div className="border-t border-line bg-white/[.02] px-4 py-3"><h3 className="text-[10px] font-bold uppercase tracking-[.2em] text-muted">Legend · select to highlight</h3><div className="mt-2 flex flex-wrap gap-2">{ids.map(id=><button key={id} type="button" disabled={disabled} aria-pressed={selected===id} onClick={()=>legendSelect(id)} onMouseEnter={()=>setHovered(id)} onMouseLeave={()=>setHovered(null)} onFocus={()=>setHovered(id)} onBlur={()=>setHovered(null)} className={`rounded-full border px-3 py-1.5 text-xs font-semibold ${active===id?'border-cyan bg-cyan/15 text-cyan':'border-line bg-white/[.03] text-slate-300 hover:border-slate-500'} disabled:cursor-default`}><span className={`mr-1.5 inline-block h-2 w-2 rounded-full ${vessels.has(id)?'bg-[#f4c469]':'bg-[#b94e6b]'}`} aria-hidden="true"/>{names[id]}</button>)}</div></div>}
     </section>
-    {selected&&<div className="mt-4 rounded-xl border border-cyan/20 bg-cyan/5 p-4" aria-live="polite"><div className="font-bold text-cyan">{anatomyInfo[selected].name}</div><p className="mt-1 text-sm text-slate-300">{anatomyInfo[selected].description}</p><p className="mt-2 text-xs text-muted"><strong className="text-medical">Case relevance:</strong> {anatomyInfo[selected].relevance}</p></div>}
+    {showDetails&&selected&&<div className="mt-4 rounded-xl border border-cyan/20 bg-cyan/5 p-4" aria-live="polite"><div className="font-bold text-cyan">{anatomyInfo[selected].name}</div><p className="mt-1 text-sm text-slate-300">{anatomyInfo[selected].function}</p><p className="mt-2 text-xs text-muted"><strong className="text-medical">Case relevance:</strong> {anatomyInfo[selected].relevance}</p></div>}
   </div>;
 }

@@ -1,12 +1,12 @@
 import type { StructureId } from '../types/simulation';
-export const anatomyInfo: Record<StructureId,{name:string;description:string;relevance:string}> = {
- lad:{name:'Left anterior descending artery (LAD)',description:'A major coronary branch running along the anterior interventricular groove.',relevance:'A key territory considered in coronary revascularization planning.'},
- lcx:{name:'Left circumflex artery (LCx)',description:'A coronary branch that courses in the left atrioventricular groove.',relevance:'Its distribution helps frame multivessel disease conceptually.'},
- rca:{name:'Right coronary artery (RCA)',description:'A coronary artery traveling in the right atrioventricular groove.',relevance:'One of the major coronary territories assessed in this case.'},
- lima:{name:'Left internal mammary artery (LIMA)',description:'An artery descending along the inner anterior chest wall.',relevance:'Commonly discussed as a conduit in CABG education.'},
- aorta:{name:'Aorta',description:'The main systemic artery leaving the left ventricle.',relevance:'Provides orientation for coronary origins and proximal circulation.'},
- 'left-ventricle':{name:'Left ventricle',description:'The muscular chamber that pumps blood into systemic circulation.',relevance:'Its function is represented by the fictional ejection fraction.'},
- 'right-ventricle':{name:'Right ventricle',description:'The chamber that pumps blood toward the lungs.',relevance:'Important orientation landmark on the anterior heart surface.'},
- 'left-atrium':{name:'Left atrium',description:'The chamber receiving oxygenated blood from the lungs.',relevance:'An anatomical landmark posterior and superior to the left ventricle.'},
- 'right-atrium':{name:'Right atrium',description:'The chamber receiving systemic venous return.',relevance:'Provides orientation along the right cardiac border.'}
+export const anatomyInfo: Record<StructureId,{name:string;description:string;function:string;relevance:string}> = {
+ lad:{name:'Left anterior descending artery (LAD)',description:'A major coronary branch running along the anterior interventricular groove.',function:'Supplies oxygenated blood to much of the anterior left ventricle and interventricular septum.',relevance:'A key territory considered in coronary revascularization planning.'},
+ lcx:{name:'Left circumflex artery (LCx)',description:'A coronary branch that courses in the left atrioventricular groove.',function:'Supplies blood to lateral and, depending on coronary dominance, posterior regions of the left heart.',relevance:'Its distribution helps frame multivessel disease conceptually.'},
+ rca:{name:'Right coronary artery (RCA)',description:'A coronary artery traveling in the right atrioventricular groove.',function:'Supplies much of the right heart and commonly portions of the inferior heart and conduction system.',relevance:'One of the major coronary territories assessed in this case.'},
+ lima:{name:'Left internal mammary artery (LIMA)',description:'An artery descending along the inner anterior chest wall.',function:'Normally supplies the anterior chest wall and breast through its branches.',relevance:'Commonly discussed as a conduit in CABG education.'},
+ aorta:{name:'Aorta',description:'The main systemic artery leaving the left ventricle.',function:'Carries oxygenated blood from the left ventricle to the systemic circulation.',relevance:'Provides orientation for coronary origins and proximal circulation.'},
+ 'left-ventricle':{name:'Left ventricle',description:'The thick-walled lower-left cardiac chamber.',function:'Pumps oxygenated blood through the aorta into systemic circulation.',relevance:'Its function is represented by the fictional ejection fraction.'},
+ 'right-ventricle':{name:'Right ventricle',description:'The lower-right cardiac chamber.',function:'Pumps deoxygenated blood through the pulmonary artery toward the lungs.',relevance:'Important orientation landmark on the anterior heart surface.'},
+ 'left-atrium':{name:'Left atrium',description:'The upper-left cardiac chamber.',function:'Receives oxygenated blood from the lungs and passes it to the left ventricle.',relevance:'An anatomical landmark posterior and superior to the left ventricle.'},
+ 'right-atrium':{name:'Right atrium',description:'The upper-right cardiac chamber.',function:'Receives systemic venous return and passes it to the right ventricle.',relevance:'Provides orientation along the right cardiac border.'}
 };
