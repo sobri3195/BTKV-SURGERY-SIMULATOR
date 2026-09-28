@@ -1,4 +1,4 @@
-import { useReducer } from 'react';
+import { useEffect, useReducer } from 'react';
 import { anatomyInfo } from '../data/anatomy';
 import { cabgSteps } from '../data/steps';
 import { categoryMaximums, scoreCategories } from '../data/scoring';
@@ -8,6 +8,16 @@ const emptyScores=()=>Object.fromEntries(scoreCategories.map(c=>[c,0])) as Simul
 const idleFeedback:SimulationState['feedback']={kind:'idle',message:'Select an answer to receive instructor feedback.'};
 export const createInitialSimulationState=():SimulationState=>({currentStep:0,selectedStructure:null,completedSteps:[],attemptsByStep:{},mistakes:[],categoryScores:emptyScores(),feedback:idleFeedback,simulationStatus:'active'});
 export const initialSimulationState=createInitialSimulationState();
+const storageKey='btkv-cabg-progress-v1';
+const restoreSimulationState=():SimulationState=>{
+ try {
+  const saved=localStorage.getItem(storageKey);
+  if(!saved)return createInitialSimulationState();
+  const parsed=JSON.parse(saved) as Partial<SimulationState>;
+  if(typeof parsed.currentStep!=='number'||!Array.isArray(parsed.completedSteps)||!parsed.categoryScores)return createInitialSimulationState();
+  return {...createInitialSimulationState(),...parsed};
+ } catch { return createInitialSimulationState(); }
+};
 const selectedForStep=(index:number,completed:string[]):StructureId|null=>{const step=cabgSteps[index];return step?.type==='anatomy'&&completed.includes(step.id)?step.correctAnswer as StructureId:null};
 export function simulationReducer(state:SimulationState,action:SimulationAction):SimulationState {
  if(action.type==='RESET') return createInitialSimulationState();
@@ -42,4 +52,4 @@ export function simulationReducer(state:SimulationState,action:SimulationAction)
  }
  return state;
 }
-export function useSimulation(){const [state,dispatch]=useReducer(simulationReducer,initialSimulationState); const total=scoreCategories.reduce((n,c)=>n+state.categoryScores[c],0); return {state,dispatch,total};}
+export function useSimulation(){const [state,dispatch]=useReducer(simulationReducer,undefined,restoreSimulationState);useEffect(()=>{localStorage.setItem(storageKey,JSON.stringify(state))},[state]);const total=scoreCategories.reduce((n,c)=>n+state.categoryScores[c],0); return {state,dispatch,total};}
