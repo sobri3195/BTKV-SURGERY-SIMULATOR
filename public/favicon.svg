@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title description">
+  <title id="title">BTKV Surgery Simulator</title>
+  <desc id="description">A heart and cardiogram symbol in a rounded square</desc>
+  <defs>
+    <linearGradient id="surface" x1="8" y1="6" x2="56" y2="58" gradientUnits="userSpaceOnUse"><stop stop-color="#102A42"/><stop offset="1" stop-color="#07111F"/></linearGradient>
+    <linearGradient id="pulse" x1="15" y1="19" x2="50" y2="45" gradientUnits="userSpaceOnUse"><stop stop-color="#35D5F5"/><stop offset="1" stop-color="#45E0AA"/></linearGradient>
+  </defs>
+  <rect x="2" y="2" width="60" height="60" rx="16" fill="url(#surface)" stroke="#35D5F5" stroke-opacity=".42" stroke-width="2"/>
+  <path d="M32 49.2C24.9 44.5 13 36.5 13 25.6 13 19.8 17.3 16 22.6 16c3.6 0 7 2 9.4 5.2C34.4 18 37.8 16 41.4 16 46.7 16 51 19.8 51 25.6c0 10.9-11.9 18.9-19 23.6Z" fill="#35D5F5" fill-opacity=".1" stroke="url(#pulse)" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M11 32h10l3.2-6.8 5.2 14.2 5.1-11 3 3.6H53" fill="none" stroke="#F4FBFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="32" cy="49" r="2" fill="#45E0AA"/>
+</svg>
