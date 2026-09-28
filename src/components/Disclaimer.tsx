@@ -1,0 +1,2 @@
+import { ShieldAlert } from 'lucide-react';
+export function Disclaimer(){return <div className="disclaimer flex gap-3"><ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-amber-300"/><p><strong className="text-amber-200">Educational simulation only.</strong> This application does not replace clinical training, supervision, institutional protocols, textbooks, guidelines, or professional medical judgment.</p></div>}

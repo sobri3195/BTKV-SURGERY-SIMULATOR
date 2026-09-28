@@ -1,0 +1,19 @@
+import { anatomyInfo } from '../data/anatomy'; import type { StructureId } from '../types/simulation';
+export function AnatomyViewer({selected,onSelect}:{selected:StructureId|null;onSelect:(id:StructureId)=>void}){
+ const common=(id:StructureId)=>({role:'button','aria-label':anatomyInfo[id].name,tabIndex:0,onClick:()=>onSelect(id),onKeyDown:(e:React.KeyboardEvent<SVGElement>)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();onSelect(id)}},className:`cursor-pointer transition-all ${selected===id?'stroke-white drop-shadow-[0_0_7px_#35d5f5]':'hover:stroke-white focus:stroke-white'}`});
+ return <div><div className="relative overflow-hidden rounded-2xl border border-line bg-[#07101d]"><svg viewBox="0 0 650 520" className="mx-auto h-auto max-h-[510px] w-full" aria-label="Interactive schematic heart anatomy" role="group">
+  <defs><linearGradient id="heart" x1="0" y1="0" x2="1" y2="1"><stop stopColor="#9b3655"/><stop offset="1" stopColor="#541d3e"/></linearGradient><filter id="soft"><feDropShadow dx="0" dy="6" stdDeviation="8" floodOpacity=".3"/></filter></defs>
+  <path d="M265 150 C180 115 115 200 145 295 C170 375 255 435 325 470 C405 425 495 340 500 245 C505 160 420 120 350 165 C325 120 300 110 265 150Z" fill="url(#heart)" stroke="#c45a73" strokeWidth="4" filter="url(#soft)"/>
+  <path {...common('left-ventricle')} d="M315 270 C330 205 430 185 470 245 C466 330 395 399 326 447 C294 383 290 326 315 270Z" fill={selected==='left-ventricle'?'#267d88':'#762b50'} stroke="#bb5b77" strokeWidth="14" opacity=".95"/>
+  <path {...common('right-ventricle')} d="M190 250 C245 206 320 232 326 296 C322 356 319 400 326 447 C258 409 188 353 164 290Z" fill={selected==='right-ventricle'?'#267d88':'#87324f'} stroke="#bb5b77" strokeWidth="14"/>
+  <ellipse {...common('left-atrium')} cx="402" cy="190" rx="66" ry="52" fill={selected==='left-atrium'?'#267d88':'#6d294a'} stroke="#c55c79" strokeWidth="12"/>
+  <ellipse {...common('right-atrium')} cx="215" cy="198" rx="67" ry="59" fill={selected==='right-atrium'?'#267d88':'#7d2d4b'} stroke="#c55c79" strokeWidth="12"/>
+  <path {...common('aorta')} d="M320 190 C315 105 318 50 382 43 C440 37 468 75 454 123" fill="none" stroke={selected==='aorta'?'#35d5f5':'#d75768'} strokeWidth="38" strokeLinecap="round"/>
+  <path {...common('lima')} d="M105 65 C104 155 108 240 118 343" fill="none" stroke={selected==='lima'?'#35d5f5':'#e48d62'} strokeWidth="18" strokeLinecap="round"/><path d="M118 125l-26 20m28 40l-28 20m31 42l-27 20" stroke="#e48d62" strokeWidth="7"/>
+  <path {...common('lad')} d="M323 190 C322 245 314 326 326 407" fill="none" stroke={selected==='lad'?'#35d5f5':'#efb45f'} strokeWidth="18" strokeLinecap="round"/>
+  <path {...common('lcx')} d="M323 190 C365 180 420 193 457 225" fill="none" stroke={selected==='lcx'?'#35d5f5':'#e0a958'} strokeWidth="18" strokeLinecap="round"/>
+  <path {...common('rca')} d="M300 190 C260 180 203 199 169 244" fill="none" stroke={selected==='rca'?'#35d5f5':'#e0a958'} strokeWidth="18" strokeLinecap="round"/>
+  <g fill="#dcecf7" fontSize="14" fontWeight="700"><text x="83" y="45">LIMA</text><text x="305" y="25">AORTA</text><text x="330" y="355">LAD</text><text x="430" y="180">LCx</text><text x="155" y="175">RCA</text></g>
+ </svg><span className="absolute bottom-3 right-3 rounded bg-ink/80 px-2 py-1 text-[10px] uppercase tracking-widest text-muted">Schematic educational illustration</span></div>
+ {selected&&<div className="mt-4 rounded-xl border border-cyan/20 bg-cyan/5 p-4" aria-live="polite"><div className="font-bold text-cyan">{anatomyInfo[selected].name}</div><p className="mt-1 text-sm text-slate-300">{anatomyInfo[selected].description}</p><p className="mt-2 text-xs text-muted"><strong className="text-medical">Case relevance:</strong> {anatomyInfo[selected].relevance}</p></div>}</div>
+}
